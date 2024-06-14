@@ -14,7 +14,10 @@ In this repository you will see a description of the project, low and high level
 This project demonstrates how to host a Dynamic Web App on AWS, utilizing various AWS services for a scalable, secure, and highly available architecture. The key components include , creation of a Docker Hub account, 3-Tier AWs Network VPC, Nat Gateway 53, Security Groups, RDS Instances, Route 53, Bastion Host, SQL Scripting, IAM User Management and many more. The setup ensures high availability across multiple availability zones, security through security groups and SSL certificates, and scalability with auto-scaling groups.
 
 
-![image](https://github.com/Otite-Git/Host-a-WordPress-Website-on-AWS/assets/154989610/818e5ec1-11d5-4e59-9c7b-ad6b3308917b)
+![image](https://github.com/Otite-Git/Host-a-Dynamic-Web-App-on-AWS-With-Docker-Amzon-ECR-and-Amazon-ECS/assets/154989610/a6b60ad6-ba1c-4f5e-9255-c018bfdbb892)
+
+
+
 - - - 
 ## **Architecture**
 
