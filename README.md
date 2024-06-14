@@ -7,7 +7,7 @@ In this repository you will see a description of the project, low and high level
 
 ## **WordPress Website Page**
 
-[www.luxelimosrentals.com](https://drive.google.com/file/d/1Gy5ZhBRLFuDI_Mi-Fpw_jSVhp-mOQ7mo/view?usp=sharing)
+[www.edit website name.com](https://drive.google.com/file/d/1Gy5ZhBRLFuDI_Mi-Fpw_jSVhp-mOQ7mo/view?usp=sharing)
 
 ## **Project Overview** - edited
 
