@@ -21,7 +21,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 - - - 
 ## **Architecture**
 
-1. **Virtual Private Cloud (VPC):** Created with Public and Private Subnets in 2 availability zones to segregate different components and enhance security.
+1. **Virtual Private Cloud (VPC):** Created a 3 Tier VIPC with Public Subnets and Private App Subnets and Private Data Subnets in 2 availability zones to segregate different components and enhance security.
 2. **Public Subnets:** Used for infrastructure components like the NAT Gateway and Application Load Balancer.
 3. **Internet Gateway:** Enables communication between instances in the VPC and the internet.
 4. **Private Subnets:** Used to host the web server, designed to serve web pages and applications over the internet securely.
