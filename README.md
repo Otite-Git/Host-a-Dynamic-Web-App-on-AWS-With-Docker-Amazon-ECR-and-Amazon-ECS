@@ -44,12 +44,12 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 
 ## **Deployment Steps**
 
-### VPC Setup
-1. Create a VPC with public and private subnets across two availability zones.
-2. Enable DNS Host names within the VPC 
-3. Set up Internet Gateway and attach it to the VPC.
-4. Create the Public and Private Subnets for the availability zones enabling auto assign.
-5. Create a route table to direct network traffic to the Intenet Gateway.
+### VPC Setup 
+1. Create a VPC with public and private subnets across two availability zones. **- edited**
+2. Enable DNS Host names within the VPC. **- edited**
+3. Set up Internet Gateway and attach it to the VPC. **- edited**
+4. Create the Public and Private Subnets for the availability zones enabling auto assign. **- edited**
+5. Create a route table to direct network traffic to the Intenet Gateway and associate the two subnets with the route table. **- edited**
 6. Create a NAT Gateway in the public subnet for internet access from private subnets.
 
 ### Security and Gateway Configuration
