@@ -52,6 +52,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 5. Create a Route Table and add a route to direct network traffic to the Intenet Gateway and associate the two subnets with the route table. **- edited**
 7. Create a NAT Gateway in the public subnet for internet access from private subnets.
 
+
 ### Security and Gateway Configuration
 1. Configure security groups to allow necessary inbound and outbound traffic.
 2. Set up Route 53 for domain name registration and DNS management.
