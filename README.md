@@ -26,21 +26,21 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 3. **Internet Gateway:** Enables communication between instances in the VPC and the internet.
 4. **Private Subnets:** Used to host the web server, designed to serve web pages and applications over the internet securely.
 5. **EC2 Instances:** Utilised to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
-6. **Web Server and Data Server:** Deployed in Private Subnets to protect the backend servers.
-7. **Application Load Balancer:** Distributes web traffic across an Auto Scaling Group of EC2 instances in two availability zones for high availability and fault tolerance.
-8. **Availability Zones:** Ensures high availability and fault tolerance by deploying resources across multiple zones.
-9. **Resources:** NAT Gateway, Bastion Host, and Application Load Balancer are deployed in Public Subnets.
-10. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
-11. **Route 53:** Used for domain name registration and DNS record management.
-12. **WordPress:** The core web application platform used to host the website.
-13. **SSL:** Secures the website with an SSL certificate.
-14. **Security Groups:** Acts as a network firewall to control traffic.
-15. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
-16. **GitHub:** Used for version control and collaboration, storing web files.
-17. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
-18. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
-19. **EFS:** Used for a shared file system.
-20. **RDS:** Used for database management.
+6. **Bastion Host:** Used to migrated data into the RDS database whiilst providing perimeter access and control security
+7. **ECR Fargate:** Helps to run containers without having to manage servers or clusters.
+9. **Application Load Balancer:** Distributes web traffic across an Auto Scaling Group of EC2 instances in two availability zones for high availability and fault tolerance.
+10. **Availability Zones:** Ensures high availability and fault tolerance by deploying resources across multiple zones.
+11. **Resources:** NAT Gateway, Bastion Host, and Application Load Balancer are deployed in Public Subnets.
+12. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
+13. **Route 53:** Used for domain name registration and DNS record management.
+15. **SSL:** Secures the website with an SSL certificate.
+16. **Security Groups:** Acts as a network firewall to control traffic.
+17. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
+18. **GitHub:** Used for version control and collaboration, storing web files.
+19. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
+20. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
+21. **EFS:** Used for a shared file system.
+22. **RDS:** Used for database management.
 
 ## **Deployment Steps**
 
