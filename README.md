@@ -63,10 +63,6 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 2. Set up Application Load Balancer in public subnets for distributing traffic.
 3. Configure Auto Scaling Group for EC2 instances to ensure scalability.
 
-### WordPress Installation
-1. Use provided scripts to install and configure Apache, PHP, MySQL, and WordPress on EC2 instances.
-2. Mount Amazon EFS to EC2 instances for shared file storage.
-3. Secure the WordPress site using the SSL certificate.
 
 ## **Repository Structure**
 
@@ -77,65 +73,110 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 
 ## **Deployment Scripts**
 
-### WordPress Installation Script
+### Dockerfile Installation Script
 
-This script sets up the WordPress application on an EC2 instance, including Apache, PHP, MySQL, and mounting the Amazon EFS.
+This script sets up the Dockerfile which will be used to build the Docker image.
 
 ```bash
-# Create root user
-sudo su
+# Use the latest version of the Amazon Linux base image
+FROM amazonlinux:2
 
-# Update software packages on the EC2 instance
-sudo yum update -y
+# Update all installed packages to thier latest versions
+RUN yum update -y 
 
-# Create an HTML directory
-sudo mkdir -p /var/www/html
+# Install the unzip package, which we will use it to extract the web files from the zip folder
+RUN yum install unzip -y
 
-# Environment variable for EFS DNS name
-EFS_DNS_NAME=fs-064e9505819af10a4.efs.us-east-1.amazonaws.com
+# Install wget package, which we will use it to download files from the internet 
+RUN yum install -y wget
 
-# Mount the EFS to the HTML directory
-sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport "$EFS_DNS_NAME":/ /var/www/html
+# Install Apache
+RUN yum install -y httpd
 
-# Install Apache web server, enable it to start on boot, and start the server
-sudo yum install -y httpd
-sudo systemctl enable httpd
-sudo systemctl start httpd
+# Install PHP and various extensions
+RUN amazon-linux-extras enable php7.4 && \
+  yum clean metadata && \
+  yum install -y \
+    php \
+    php-common \
+    php-pear \
+    php-cgi \
+    php-curl \
+    php-mbstring \
+    php-gd \
+    php-mysqlnd \
+    php-gettext \
+    php-json \
+    php-xml \
+    php-fpm \
+    php-intl \
+    php-zip
 
-# Install PHP 8 with necessary extensions for WordPress
-sudo dnf install -y php php-cli php-cgi php-curl php-mbstring php-gd php-mysqlnd php-gettext php-json php-xml php-fpm php-intl php-zip php-bcmath php-ctype php-fileinfo php-openssl php-pdo php-tokenizer
+# Download the MySQL repository package
+RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
 
-# Install MySQL 8 community repository
-sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-sudo dnf install -y mysql80-community-release-el9-1.noarch.rpm
-sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
-sudo dnf repolist enabled | grep "mysql.*-community.*"
-sudo dnf install -y mysql-community-server
+# Import the GPG key for the MySQL repository
+RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
 
-# Start and enable MySQL server
-sudo systemctl start mysqld
-sudo systemctl enable mysqld
+# Install the MySQL repository package
+RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y
 
-# Set permissions
-sudo usermod -a -G apache ec2-user
-sudo chown -R ec2-user:apache /var/www
-sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
-sudo find /var/www -type f -exec sudo chmod 0664 {} \;
-sudo chown apache:apache -R /var/www/html
+# Install the MySQL community server package
+RUN yum install mysql-community-server -y
 
-# Download and extract WordPress files
-wget https://wordpress.org/latest.tar.gz
-tar -xzf latest.tar.gz
-sudo cp -r wordpress/* /var/www/html/
+# Change directory to the html directory
+WORKDIR /var/www/html
 
-# Create the wp-config.php file
-sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+# Install Git
+RUN yum install -y git
 
-# Edit the wp-config.php file
-sudo vi /var/www/html/wp-config.php
+# Clone the GitHub repository
+RUN git clone https://"your_personal_access_token"@github.com/"your_github_username"/"your_repository_name".git 
 
-# Restart the web server
-sudo service httpd restart
+# Unzip the zip folder containing the web files
+RUN unzip "your_repository_name"/"web_file_zip" -d "your_repository_name"/
+
+# Copy the web files into the HTML directory
+RUN cp -av "your_repository_name"/"web_file_unzip"/. /var/www/html
+
+# Remove the repository we cloned
+RUN rm -rf "your_repository_name"
+
+# Enable the mod_rewrite setting in the httpd.conf file
+RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
+
+# Give full access to the /var/www/html directory
+RUN chmod -R 777 /var/www/html
+
+# Give full access to the storage directory
+RUN chmod -R 777 storage/
+
+# Use the sed command to search the .env file for a line that starts with APP_ENV= and replace everything after the = character
+RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env
+
+# Use the sed command to search the .env file for a line that starts with APP_URL= and replace everything after the = character
+RUN sed -i '/^APP_URL=/ s/=.*$/=https:\/\/"your_domain_name"\//' .env
+
+# Use the sed command to search the .env file for a line that starts with DB_HOST= and replace everything after the = character
+RUN sed -i '/^DB_HOST=/ s/=.*$/="your_rds_endpoint"/' .env
+
+# Use the sed command to search the .env file for a line that starts with DB_DATABASE= and replace everything after the = character
+RUN sed -i '/^DB_DATABASE=/ s/=.*$/="your_rds_db_name"/' .env
+
+# Use the sed command to search the .env file for a line that starts with DB_USERNAME= and replace everything after the = character
+RUN sed -i '/^DB_USERNAME=/ s/=.*$/="your_rds_master_username"/' .env
+
+# Use the sed command to search the .env file for a line that starts with DB_PASSWORD= and replace everything after the = character
+RUN sed -i '/^DB_PASSWORD=/ s/=.*$/="your_rds_db_password"/' .env
+
+# Copy the file, AppServiceProvider.php from the host file system into the container at the path app/Providers/AppServiceProvider.php
+COPY AppServiceProvider.php app/Providers/AppServiceProvider.php
+
+# Expose the default Apache and MySQL ports
+EXPOSE 80 3306
+
+# Start Apache and MySQL
+ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 ```
 
 ### Auto Scaling Group Launch Template Script
