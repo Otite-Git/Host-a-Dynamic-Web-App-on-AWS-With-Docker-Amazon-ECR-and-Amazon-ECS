@@ -34,13 +34,14 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 12. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
 13. **Route 53:** Used for domain name registration and DNS record management.
 15. **SSL:** Secures the website with an SSL certificate.
-16. **Security Groups:** Acts as a network firewall to control traffic.
-17. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
-18. **GitHub:** Used for version control and collaboration, storing web files.
-19. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
-20. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
-21. **EFS:** Used for a shared file system.
-22. **RDS:** Used for database management.
+16  **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile
+17. **Security Groups:** Acts as a network firewall to control traffic.
+18. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
+19. **GitHub:** Used for version control and collaboration, storing web files.
+20. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
+21. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
+22. **EFS:** Used for a shared file system.
+23. **RDS:** Used for database management.
 
 ## **Deployment Steps**
 
