@@ -34,14 +34,15 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 12. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
 13. **Route 53:** Used for domain name registration and DNS record management.
 15. **SSL:** Secures the website with an SSL certificate.
-16  **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile
+16. **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile
 17. **Security Groups:** Acts as a network firewall to control traffic.
 18. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
 19. **GitHub:** Used for version control and collaboration, storing web files.
-20. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
-21. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
-22. **EFS:** Used for a shared file system.
-23. **RDS:** Used for database management.
+20. **Git:** Used to create a Gitignore file to prevent the dockerfile being committed to Github.
+21. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
+22. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
+23. **EFS:** Used for a shared file system.
+24. **RDS:** Used for database management.
 
 ## **Deployment Steps**
 
@@ -52,7 +53,6 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 4. Create the Public and Private Subnets for the availability zones enabling auto assign IP setting for the public subnets. **- edited**
 5. Create a Route Table and add a route to direct network traffic to the Intenet Gateway and associate the two subnets with the route table. **- edited**
 7. Create a NAT Gateway in the public subnet for internet access from private subnets.
-
 
 ### Security and Gateway Configuration
 1. Configure security groups to allow necessary inbound and outbound traffic.
