@@ -64,10 +64,16 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 2. Set up Application Load Balancer in public subnets for distributing traffic.
 3. Configure Auto Scaling Group for EC2 instances to ensure scalability.
 
+### Script Confirugation
+1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is build.
+2. Create a folder in your visual studio code which will host the following files i.e. Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
+3. Build the Dockerfile that will be used to create the docker image updating the values and information within the dockerfile script. (See the script below which is ran used Visual Studio Code).
+4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php has AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPs in order for the application to load properly.
+5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a Gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed does not include the AppServiceProvider.php file as it is sensitive information. Copy the 'Dockerfile-reference' file name into the gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
 
-## **Repository Structure**
+## **README Structure**
 
-- **Deployment Scripts:** Contains scripts for setting up and configuring WordPress on EC2 instances.
+- **Deployment Scripts:** Contains scripts for setting up opensource software LAMP stack (Linux, Apache, MySQL, PHP) used to build the Dynamic Web Application which is sripted within the Dockerfile and developed for the dockerimage. 
 - **Architectural Diagrams:** Visual representation of the architecture and setup.
 - **Configuration Files:** Includes files for configuring AWS resources and services.
 - **Documentation:** Detailed documentation on setup, configuration, and usage.
@@ -117,7 +123,7 @@ RUN amazon-linux-extras enable php7.4 && \
 RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
 
 # Import the GPG key for the MySQL repository
-RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
+RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
 
 # Install the MySQL repository package
 RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y
@@ -131,41 +137,17 @@ WORKDIR /var/www/html
 # Install Git
 RUN yum install -y git
 
-# Set the build argument directive
-ARG PERSONAL_ACCESS_TOKEN
-ARG GITHUB_USERNAME
-ARG REPOSITORY_NAME
-ARG WEB_FILE_ZIP
-ARG WEB_FILE_UNZIP
-ARG DOMAIN_NAME
-ARG RDS_ENDPOINT
-ARG RDS_DB_NAME
-ARG RDS_MASTER_USERNAME
-ARG RDS_DB_PASSWORD
-
-# Use the build argument to set environment variables 
-ENV PERSONAL_ACCESS_TOKEN=$PERSONAL_ACCESS_TOKEN
-ENV GITHUB_USERNAME=$GITHUB_USERNAME
-ENV REPOSITORY_NAME=$REPOSITORY_NAME
-ENV WEB_FILE_ZIP=$WEB_FILE_ZIP
-ENV WEB_FILE_UNZIP=$WEB_FILE_UNZIP
-ENV DOMAIN_NAME=$DOMAIN_NAME
-ENV RDS_ENDPOINT=$RDS_ENDPOINT
-ENV RDS_DB_NAME=$RDS_DB_NAME
-ENV RDS_MASTER_USERNAME=$RDS_MASTER_USERNAME
-ENV RDS_DB_PASSWORD=$RDS_DB_PASSWORD
-
 # Clone the GitHub repository
-RUN git clone https://$PERSONAL_ACCESS_TOKEN@github.com/$GITHUB_USERNAME/$REPOSITORY_NAME.git
+RUN git clone https://"your_personal_access_token"@github.com/"your_github_username"/"your_repository_name".git 
 
 # Unzip the zip folder containing the web files
-RUN unzip $REPOSITORY_NAME/$WEB_FILE_ZIP -d $REPOSITORY_NAME/
+RUN unzip "your_repository_name"/"web_file_zip" -d "your_repository_name"/
 
 # Copy the web files into the HTML directory
-RUN cp -av $REPOSITORY_NAME/$WEB_FILE_UNZIP/. /var/www/html
+RUN cp -av "your_repository_name"/"web_file_unzip"/. /var/www/html
 
 # Remove the repository we cloned
-RUN rm -rf $REPOSITORY_NAME
+RUN rm -rf "your_repository_name"
 
 # Enable the mod_rewrite setting in the httpd.conf file
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
@@ -180,19 +162,19 @@ RUN chmod -R 777 storage/
 RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env
 
 # Use the sed command to search the .env file for a line that starts with APP_URL= and replace everything after the = character
-RUN sed -i "/^APP_URL=/ s/=.*$/=https:\/\/$DOMAIN_NAME\//" .env
+RUN sed -i '/^APP_URL=/ s/=.*$/=https:\/\/"your_domain_name"\//' .env
 
 # Use the sed command to search the .env file for a line that starts with DB_HOST= and replace everything after the = character
-RUN sed -i "/^DB_HOST=/ s/=.*$/=$RDS_ENDPOINT/" .env
+RUN sed -i '/^DB_HOST=/ s/=.*$/="your_rds_endpoint"/' .env
 
 # Use the sed command to search the .env file for a line that starts with DB_DATABASE= and replace everything after the = character
-RUN sed -i "/^DB_DATABASE=/ s/=.*$/=$RDS_DB_NAME/" .env 
+RUN sed -i '/^DB_DATABASE=/ s/=.*$/="your_rds_db_name"/' .env
 
 # Use the sed command to search the .env file for a line that starts with DB_USERNAME= and replace everything after the = character
-RUN  sed -i "/^DB_USERNAME=/ s/=.*$/=$RDS_MASTER_USERNAME/" .env
+RUN sed -i '/^DB_USERNAME=/ s/=.*$/="your_rds_master_username"/' .env
 
 # Use the sed command to search the .env file for a line that starts with DB_PASSWORD= and replace everything after the = character
-RUN  sed -i "/^DB_PASSWORD=/ s/=.*$/=$RDS_DB_PASSWORD/" .env
+RUN sed -i '/^DB_PASSWORD=/ s/=.*$/="your_rds_db_password"/' .env
 
 # Copy the file, AppServiceProvider.php from the host file system into the container at the path app/Providers/AppServiceProvider.php
 COPY AppServiceProvider.php app/Providers/AppServiceProvider.php
@@ -202,6 +184,44 @@ EXPOSE 80 3306
 
 # Start Apache and MySQL
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+```
+
+### APPServiceProvider.php Srcipt
+```bash
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //set whatever level you want
+        error_reporting(E_ALL ^ E_NOTICE);
+    
+        if (env('APP_ENV') === 'production') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+    }
+    
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
 ```
 
 ### Auto Scaling Group Launch Template Script
