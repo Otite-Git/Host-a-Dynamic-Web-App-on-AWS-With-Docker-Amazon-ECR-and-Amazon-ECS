@@ -70,7 +70,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 3. Build the Dockerfile that will be used to create the docker image updating the values and information within the dockerfile script. (See the script below which is ran used Visual Studio Code).
 4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php has AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPs in order for the application to load properly.
 5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a Gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed does not include the AppServiceProvider.php file as it is sensitive information. Copy the 'Dockerfile-reference' file name into the gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
-
+6. Create a new Dockerfile in tbe rentzone folder and copy the 
 ## **README Structure**
 
 - **Deployment Scripts:** Contains scripts for setting up opensource software LAMP stack (Linux, Apache, MySQL, PHP) used to build the Dynamic Web Application which is sripted within the Dockerfile and developed for the dockerimage. 
@@ -80,9 +80,9 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 
 ## **Deployment Scripts**
 
-### Dockerfile Installation Script
+### Dockerfile-reference Installation Script
 
-This script sets up the Dockerfile which will be used to build the Docker image contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile eliminating the need to hard code sensitive information on the Dockerfile.
+This Dokcerfile contains the script used to build the dockerfile image with sesntivie information inputted. This will be used a demonstration as to how to implement gitignore for the Dockerfile.
 
 ```bash
 # Use the latest version of the Amazon Linux base image
@@ -224,46 +224,135 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-### Auto Scaling Group Launch Template Script
+### Dockerfile Installation Script
 
-This script configures new EC2 instances in the Auto Scaling Group with the necessary software and settings.
+This script sets up the Dockerfile which will be used to build the Docker image contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile eliminating the need to hard code sensitive information on the Dockerfile.
+
 
 ```bash
-#!/bin/bash
-# Update software packages on the EC2 instance
-sudo yum update -y
+# Use the latest version of the Amazon Linux base image
+FROM amazonlinux:2
 
-# Install Apache web server, enable it to start on boot, and start the server
-sudo yum install -y httpd
-sudo systemctl enable httpd
-sudo systemctl start httpd
+# Update all installed packages to thier latest versions
+RUN yum update -y 
 
-# Install PHP 8 with necessary extensions for WordPress
-sudo dnf install -y php php-cli php-cgi php-curl php-mbstring php-gd php-mysqlnd php-gettext php-json php-xml php-fpm php-intl php-zip php-bcmath php-ctype php-fileinfo php-openssl php-pdo php-tokenizer
+# Install the unzip package, which we will use it to extract the web files from the zip folder
+RUN yum install unzip -y
 
-# Install MySQL 8 community repository
-sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-sudo dnf install -y mysql80-community-release-el9-1.noarch.rpm
-sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
-sudo dnf repolist enabled | grep "mysql.*-community.*"
-sudo dnf install -y mysql-community-server
+# Install wget package, which we will use it to download files from the internet 
+RUN yum install -y wget
 
-# Start and enable MySQL server
-sudo systemctl start mysqld
-sudo systemctl enable mysqld
+# Install Apache
+RUN yum install -y httpd
 
-# Environment variable for EFS DNS name
-EFS_DNS_NAME=fs-02d3268559aa2a318.efs.us-east-1.amazonaws.com
+# Install PHP and various extensions
+RUN amazon-linux-extras enable php7.4 && \
+  yum clean metadata && \
+  yum install -y \
+    php \
+    php-common \
+    php-pear \
+    php-cgi \
+    php-curl \
+    php-mbstring \
+    php-gd \
+    php-mysqlnd \
+    php-gettext \
+    php-json \
+    php-xml \
+    php-fpm \
+    php-intl \
+    php-zip
 
-# Mount the EFS to the HTML directory
-echo "$EFS_DNS_NAME:/ /var/www/html nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
-mount -a
+# Download the MySQL repository package
+RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
 
-# Set permissions
-sudo chown apache:apache -R /var/www/html
+# Import the GPG key for the MySQL repository
+RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
 
-# Restart the web server
-sudo service httpd restart
+# Install the MySQL repository package
+RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y
+
+# Install the MySQL community server package
+RUN yum install mysql-community-server -y
+
+# Change directory to the html directory
+WORKDIR /var/www/html
+
+# Install Git
+RUN yum install -y git
+
+# Set the build argument directive
+ARG PERSONAL_ACCESS_TOKEN
+ARG GITHUB_USERNAME
+ARG REPOSITORY_NAME
+ARG WEB_FILE_ZIP
+ARG WEB_FILE_UNZIP
+ARG DOMAIN_NAME
+ARG RDS_ENDPOINT
+ARG RDS_DB_NAME
+ARG RDS_MASTER_USERNAME
+ARG RDS_DB_PASSWORD
+
+# Use the build argument to set environment variables 
+ENV PERSONAL_ACCESS_TOKEN=$PERSONAL_ACCESS_TOKEN
+ENV GITHUB_USERNAME=$GITHUB_USERNAME
+ENV REPOSITORY_NAME=$REPOSITORY_NAME
+ENV WEB_FILE_ZIP=$WEB_FILE_ZIP
+ENV WEB_FILE_UNZIP=$WEB_FILE_UNZIP
+ENV DOMAIN_NAME=$DOMAIN_NAME
+ENV RDS_ENDPOINT=$RDS_ENDPOINT
+ENV RDS_DB_NAME=$RDS_DB_NAME
+ENV RDS_MASTER_USERNAME=$RDS_MASTER_USERNAME
+ENV RDS_DB_PASSWORD=$RDS_DB_PASSWORD
+
+# Clone the GitHub repository
+RUN git clone https://$PERSONAL_ACCESS_TOKEN@github.com/$GITHUB_USERNAME/$REPOSITORY_NAME.git
+
+# Unzip the zip folder containing the web files
+RUN unzip $REPOSITORY_NAME/$WEB_FILE_ZIP -d $REPOSITORY_NAME/
+
+# Copy the web files into the HTML directory
+RUN cp -av $REPOSITORY_NAME/$WEB_FILE_UNZIP/. /var/www/html
+
+# Remove the repository we cloned
+RUN rm -rf $REPOSITORY_NAME
+
+# Enable the mod_rewrite setting in the httpd.conf file
+RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
+
+# Give full access to the /var/www/html directory
+RUN chmod -R 777 /var/www/html
+
+# Give full access to the storage directory
+RUN chmod -R 777 storage/
+
+# Use the sed command to search the .env file for a line that starts with APP_ENV= and replace everything after the = character
+RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env
+
+# Use the sed command to search the .env file for a line that starts with APP_URL= and replace everything after the = character
+RUN sed -i "/^APP_URL=/ s/=.*$/=https:\/\/$DOMAIN_NAME\//" .env
+
+# Use the sed command to search the .env file for a line that starts with DB_HOST= and replace everything after the = character
+RUN sed -i "/^DB_HOST=/ s/=.*$/=$RDS_ENDPOINT/" .env
+
+# Use the sed command to search the .env file for a line that starts with DB_DATABASE= and replace everything after the = character
+RUN sed -i "/^DB_DATABASE=/ s/=.*$/=$RDS_DB_NAME/" .env 
+
+# Use the sed command to search the .env file for a line that starts with DB_USERNAME= and replace everything after the = character
+RUN  sed -i "/^DB_USERNAME=/ s/=.*$/=$RDS_MASTER_USERNAME/" .env
+
+# Use the sed command to search the .env file for a line that starts with DB_PASSWORD= and replace everything after the = character
+RUN  sed -i "/^DB_PASSWORD=/ s/=.*$/=$RDS_DB_PASSWORD/" .env
+
+# Copy the file, AppServiceProvider.php from the host file system into the container at the path app/Providers/AppServiceProvider.php
+COPY AppServiceProvider.php app/Providers/AppServiceProvider.php
+
+# Expose the default Apache and MySQL ports
+EXPOSE 80 3306
+
+# Start Apache and MySQL
+ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]t
 ```
 
 ## **How to Use**
