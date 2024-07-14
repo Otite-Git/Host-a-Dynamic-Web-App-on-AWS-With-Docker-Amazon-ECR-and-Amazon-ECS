@@ -73,7 +73,14 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 6. Create a new Dockerfile in the rentzone folder and copy the Dockerfile installation script below into the newly created Dockerfile. Youll see that this Dockefile and the orginal Dockerfile created now title Dockerfile-refence looks the same. The only difference is that the new Dockerfile contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile.
 7. Write the script to build the Dockerfile image by creating a new file in the renzone folder called build_image.sh. Copy the 'buid_image.sh script below into the buile_image.sh file and for every build argument listed in the Dockerfile enter their values in the build_image.sh file
 8. The next step is to make the shell script file created above in line 7 executable. Using the command text script below run 'chmod +x build_image.sh' in VS Code to excute the build_image.sh executable.
-9. Run the shell script file to build the Docker image. Do this right clicking 'build_image.sh and select 'open in integrated terminal.' 
+9. Run the shell script file to build the Docker image. Do this right clicking 'build_image.sh and select 'open in integrated terminal.'
+
+## **Install AWS Command Line CLI**
+1. Visit www.docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+2. Depending on your OS, run the command line installer instructions on your terminal
+
+## **IAM User Creation**
+1. Create an IAM user assigning administrative access. Creatr an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
 
 ## **README Structure**
 
