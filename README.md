@@ -70,7 +70,11 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 3. Build the Dockerfile that will be used to create the docker image updating the values and information within the dockerfile script. (See the script below which is ran used Visual Studio Code).
 4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php has AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPs in order for the application to load properly.
 5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a Gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed does not include the AppServiceProvider.php file as it is sensitive information. Copy the 'Dockerfile-reference' file name into the gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
-6. Create a new Dockerfile in tbe rentzone folder and copy the 
+6. Create a new Dockerfile in the rentzone folder and copy the Dockerfile installation script below into the newly created Dockerfile. Youll see that this Dockefile and the orginal Dockerfile created now title Dockerfile-refence looks the same. The only difference is that the new Dockerfile contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile.
+7. Write the script to build the Dockerfile image by creating a new file in the renzone folder called build_image.sh. Copy the 'buid_image.sh script below into the buile_image.sh file and for every build argument listed in the Dockerfile enter their values in the build_image.sh file
+8. The next step is to make the shell script file created above in line 7 executable. Using the command text script below run 'chmod +x build_image.sh' in VS Code to excute the build_image.sh executable.
+9. Run the shell script file to build the Docker image. Do this right clicking 'build_image.sh and select 'open in integrated terminal.' 
+
 ## **README Structure**
 
 - **Deployment Scripts:** Contains scripts for setting up opensource software LAMP stack (Linux, Apache, MySQL, PHP) used to build the Dynamic Web Application which is sripted within the Dockerfile and developed for the dockerimage. 
@@ -82,7 +86,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 
 ### Dockerfile-reference Installation Script
 
-This Dokcerfile contains the script used to build the dockerfile image with sesntivie information inputted. This will be used a demonstration as to how to implement gitignore for the Dockerfile.
+This is script used to build the dockerfile image with sesntivie information inputted. This will be used a demonstration as to how to implement gitignore for the Dockerfile.
 
 ```bash
 # Use the latest version of the Amazon Linux base image
@@ -353,6 +357,66 @@ EXPOSE 80 3306
 
 # Start Apache and MySQL
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]t
+```
+
+### Script to build the Dockerimage Installation Script
+
+Now that the Dockerfile has been created, the script below will be used to build the Dockerimage.
+
+```bash
+#!/bin/bash
+
+# Run the docker build command
+docker build \
+--build-arg PERSONAL_ACCESS_TOKEN= \
+--build-arg GITHUB_USERNAME= \
+--build-arg REPOSITORY_NAME= \
+--build-arg WEB_FILE_ZIP= \
+--build-arg WEB_FILE_UNZIP= \
+--build-arg DOMAIN_NAME= \
+--build-arg RDS_ENDPOINT= \
+--build-arg RDS_DB_NAME= \
+--build-arg RDS_MASTER_USERNAME= \
+--build-arg RDS_DB_PASSWORD= \
+-t <image-tag> .
+```
+### Command script 
+
+This command script contains the various script instructions to execute the buildimage.sh, execute the docker image and other intructions.
+
+```bash
+# make shell script executable: 
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+# make shell script executable mac:
+chmod +x build_image.sh
+
+----------------------------------------------------------------
+
+# aws cli command to create an amazon ecr repository
+aws ecr create-repository --repository-name <repository-name> --region <region>
+  
+----------------------------------------------------------------
+
+# retag docker image 
+docker tag <image-tag> <repository-uri>
+
+# login to ecr
+aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+
+# push docker image to ecr repository 
+docker push <repository-uri>
+  
+----------------------------------------------------------------
+
+# to create an ssh tunnel in powershell, execute the following command:
+ssh -i <key_pier.pem> ec2-user@<public-ip> -L 3306:<rds-endpoint>:3306 -N
+
+
+# to create an ssh tunnel in linux or macOS, execute the following commands:
+Note: Be sure to replace YOUR_EC2_KEY, LOCAL_PORT, RDS_ENDPOINT, REMOTE_PORT, EC2_USER, and EC2_HOST with your relevant information.
+
+ssh -i "YOUR_EC2_KEY" -L LOCAL_PORT:RDS_ENDPOINT:REMOTE_PORT EC2_USER@EC2_HOST -N -f
 ```
 
 ## **How to Use**
