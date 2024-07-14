@@ -197,7 +197,7 @@ EXPOSE 80 3306
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 ```
 
-### APPServiceProvider.php Srcipt
+### APPServiceProvider.php Script
 ```bash
 <?php
 
