@@ -59,11 +59,6 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 2. Set up Route 53 for domain name registration and DNS management.
 3. Use AWS Certificate Manager to manage SSL/TLS certificates for secure communication.
 
-### EC2 and Application Setup
-1. Launch EC2 instances in private subnets for hosting the WordPress application.
-2. Set up Application Load Balancer in public subnets for distributing traffic.
-3. Configure Auto Scaling Group for EC2 instances to ensure scalability.
-
 ### Script Confirugation
 1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is build.
 2. Create a folder in your visual studio code which will host the following files i.e. Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
@@ -81,6 +76,13 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 
 ## **IAM User Creation**
 1. Create an IAM user assigning administrative access. Creatr an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
+2. Run AWS Configure Command on command prompt or Terminal enter user access key ID and Secret Access Key information.
+
+### ECR and Application Setup
+1. Create a repository in Amazon ECR with AWS CLI. using the command below.
+```bash
+aws ecr create-repository --repository-name <repository-name> --region <region>
+```
 
 ## **README Structure**
 
