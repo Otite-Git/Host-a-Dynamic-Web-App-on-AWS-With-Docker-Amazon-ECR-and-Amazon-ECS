@@ -83,6 +83,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 ```bash
 aws ecr create-repository --repository-name <repository-name> --region <region>
 ```
+2. 
 
 ## **README Structure**
 
