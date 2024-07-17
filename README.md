@@ -5,7 +5,7 @@ Hi! Welcome to my repository containing my AWS Project I've have undertaken as a
 
 In this repository you will see a description of the project, low and high level architecture, scripting files and information on other key assets that I have used to develop this project as part of my portfolio and progressive development.
 
-## **WordPress Website Page**
+## **Website Page**
 
 [www.edit website name.com](https://drive.google.com/file/d/1Gy5ZhBRLFuDI_Mi-Fpw_jSVhp-mOQ7mo/view?usp=sharing)
 
@@ -27,22 +27,24 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 4. **Private Subnets:** Used to host the web server, designed to serve web pages and applications over the internet securely.
 5. **EC2 Instances:** Utilised to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
 6. **Bastion Host:** Used to migrated data into the RDS database whiilst providing perimeter access and control security
-7. **ECR Fargate:** Helps to run containers without having to manage servers or clusters.
+7. **AWS Fargate:** Helps to run containers without having to manage servers or clusters.
+8. ***S3 Bucket:** Enables envrionmental file storage.
 9. **Application Load Balancer:** Distributes web traffic across an Auto Scaling Group of EC2 instances in two availability zones for high availability and fault tolerance.
 10. **Availability Zones:** Ensures high availability and fault tolerance by deploying resources across multiple zones.
 11. **Resources:** NAT Gateway, Bastion Host, and Application Load Balancer are deployed in Public Subnets.
-12. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
+12. **POTENTIALLY REMOVE THIS: Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
 13. **Route 53:** Used for domain name registration and DNS record management.
-15. **SSL:** Secures the website with an SSL certificate.
-16. **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile.
-17. **Security Groups:** Acts as a network firewall to control traffic.
-18. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
-19. **GitHub:** Used for version control and collaboration, storing web files.
-20. **Git:** Used to create a Gitignore file to prevent the Dockerfile being committed to Github.
-21. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
-22. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
-23. **EFS:** Used for a shared file system.
-24. **RDS:** Used for database management.
+14. **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile.
+15. **Security Groups:** Acts as a network firewall to control traffic.
+16. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
+17. **GitHub:** Used for version control and collaboration, storing web files.
+18. **Git:** Used to create a Gitignore file to prevent the Dockerfile being committed to Github.
+19. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
+20. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
+21. **EFS:** Used for a shared file system.
+23. **RDS:** Used for database management.
+24. **IAM Roles:** Used to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
+25. **Flyway:** 
 
 ## **Deployment Steps**
 
@@ -75,7 +77,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 2. Depending on your OS, run the command line installer instructions on your terminal
 
 ### IAM User Creation
-1. Create an IAM user assigning administrative access. Creatr an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
+1. Create an IAM user assigning administrative access. Create an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
 2. Run AWS Configure Command on command prompt or Terminal enter user access key ID and Secret Access Key information.
 
 ### ECR and Application Setup
