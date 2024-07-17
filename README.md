@@ -95,7 +95,7 @@ docker push <repository-uri>
 ```bash
 aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 ```
-5. Run the command of pushing the image into the ECR repository. 
+5. Run the command of pushing the image into the ECR repository. Once this is completed, the ECS Fargate service will use this image to run the containers. 
 ```bash
 docker push <repository uri>
 ```
