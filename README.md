@@ -99,6 +99,9 @@ aws ecr get-login-password | docker login --username AWS --password-stdin <aws_a
 ```bash
 docker push <repository uri>
 ```
+### Key Pair Creation
+1. Create the Key Pair which will be used to SSH into the management instance.
+2. Once you create your Key Pair, the note txt file will download containing the Key Pair information. Move this txt file to where your powershell terminal directory is pointing to. The reason for this is so when the you run the command to SSH into the EC2 instance, the Key Pair will already be in the directory you run the SSH command from.
 
 ## **Deployment Scripts**
 
