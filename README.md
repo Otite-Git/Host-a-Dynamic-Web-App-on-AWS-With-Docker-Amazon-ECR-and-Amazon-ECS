@@ -38,7 +38,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 17. **Security Groups:** Acts as a network firewall to control traffic.
 18. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
 19. **GitHub:** Used for version control and collaboration, storing web files.
-20. **Git:** Used to create a Gitignore file to prevent the dockerfile being committed to Github.
+20. **Git:** Used to create a Gitignore file to prevent the Dockerfile being committed to Github.
 21. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
 22. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
 23. **EFS:** Used for a shared file system.
@@ -62,7 +62,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 ### Script Confirugation
 1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is build.
 2. Create a folder in your visual studio code which will host the following files i.e. Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
-3. Build the Dockerfile that will be used to create the docker image updating the values and information within the dockerfile script. (See the script below which is ran used Visual Studio Code).
+3. Build the Dockerfile that will be used to create the Docker image updating the values and information within the Dockerfile script. (See the script below which is ran used Visual Studio Code).
 4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php has AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPs in order for the application to load properly.
 5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a Gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed does not include the AppServiceProvider.php file as it is sensitive information. Copy the 'Dockerfile-reference' file name into the gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
 6. Create a new Dockerfile in the rentzone folder and copy the Dockerfile installation script below into the newly created Dockerfile. Youll see that this Dockefile and the orginal Dockerfile created now title Dockerfile-refence looks the same. The only difference is that the new Dockerfile contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile.
@@ -70,11 +70,11 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 8. The next step is to make the shell script file created above in line 7 executable. Using the command text script below run 'chmod +x build_image.sh' in VS Code to excute the build_image.sh executable.
 9. Run the shell script file to build the Docker image. Do this right clicking 'build_image.sh and select 'open in integrated terminal.'
 
-## **Install AWS Command Line CLI**
+### Install AWS Command Line CLI
 1. Visit www.docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 2. Depending on your OS, run the command line installer instructions on your terminal
 
-## **IAM User Creation**
+### IAM User Creation
 1. Create an IAM user assigning administrative access. Creatr an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
 2. Run AWS Configure Command on command prompt or Terminal enter user access key ID and Secret Access Key information.
 
@@ -83,20 +83,28 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 ```bash
 aws ecr create-repository --repository-name <repository-name> --region <region>
 ```
-2. 
-
-## **README Structure**
-
-- **Deployment Scripts:** Contains scripts for setting up opensource software LAMP stack (Linux, Apache, MySQL, PHP) used to build the Dynamic Web Application which is sripted within the Dockerfile and developed for the dockerimage. 
-- **Architectural Diagrams:** Visual representation of the architecture and setup.
-- **Configuration Files:** Includes files for configuring AWS resources and services.
-- **Documentation:** Detailed documentation on setup, configuration, and usage.
+2. Push the Dock Image to the Amazon ECR repository already created by running the command below. Replace placeholders with the actual tage name and repository uri. In this case the tage name used on thos projectrentzone. The repository uri can be located on the Amazon ECR repositories page. This command will re-tag the image, copy the image a paste it with the terminal of the renzone folder to successfully retag the image.
+```bash
+docker tag <image-tag> <repository-uri>
+```
+3. Once the image is re-tagged, log into your Amazon ECR run the command below to push the Docker Image into the Amazon ECR repository. Log into the management console to find the repository uri
+```bash
+docker push <repository-uri>
+```
+4. To log into Amazon ECR, use the script below updating the account ID and reigion information. This information can be otained from the AWS management console. Once update copy and paste the command script in the open terminal of the rentzone folder.
+```bash
+aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+```
+5. Run the command of pushing the image into the ECR repository. 
+```bash
+docker push <repository uri>
+```
 
 ## **Deployment Scripts**
 
 ### Dockerfile-reference Installation Script
 
-This is script used to build the dockerfile image with sesntivie information inputted. This will be used a demonstration as to how to implement gitignore for the Dockerfile.
+This is script used to build the Dockerfile image with sesntivie information inputted. This will be used a demonstration as to how to implement gitignore for the Dockerfile.
 
 ```bash
 # Use the latest version of the Amazon Linux base image
