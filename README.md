@@ -105,6 +105,11 @@ docker push <repository uri>
 1. Create the Key Pair which will be used to SSH into the management instance.
 2. Once you create your Key Pair, the note txt file will download containing the Key Pair information. Move this txt file to where your powershell terminal directory is pointing to. The reason for this is so when the you run the command to SSH into the EC2 instance, the Key Pair will already be in the directory you run the SSH command from.
 
+### Bastion Host Configuration
+1. Create a Bastion Host Launch Instance using the Amazon 2 Linux AMI and T2 Mirco which are both free tiers.
+2. Ensure to enquip the Kep Pair created above and select the VPC used to host the resources within the VPC environment.
+3. Select the Pbulic AZ1 Subnet and select the Bastion Host Security Group which you would created in the Secruity Group creation step above.
+
 ## **Deployment Scripts**
 
 ### Dockerfile-reference Installation Script
