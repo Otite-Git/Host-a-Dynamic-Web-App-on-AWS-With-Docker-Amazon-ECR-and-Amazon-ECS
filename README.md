@@ -110,6 +110,21 @@ docker push <repository uri>
 2. Ensure to enquip the Kep Pair created above and select the VPC used to host the resources within the VPC environment.
 3. Select the Pbulic AZ1 Subnet and select the Bastion Host Security Group which you would created in the Secruity Group creation step above.
 
+### Flyway Configuration
+1. Download Flyway Community Version and open the Flyway folder in Visual Studio Code.
+2. within the Flyway folder under 'conf' create a 'flyway.conf' file 
+3. In order to use Flyway to migrate data into to RDS MySQL Database, the Flyway configuration file must be updated with the credentials of the database below thats needs to be connection to
+```bash
+flyway.url=jdbc:mysql://localhost:3306/
+flyway.user=
+flyway.password=
+flyway.locations=filesystem:sql
+flyway.cleanDisabled=false
+```
+4. Copy the credential infrmation above and past in into the newlet created 'flyway.conf file created using your RDS configuration information i.e Master username and DB name to update the crednetials. This information will be used to connect the RDS Databse.
+
+
+
 ## **Deployment Scripts**
 
 ### Dockerfile-reference Installation Script
