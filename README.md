@@ -44,7 +44,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 21. **EFS:** Used for a shared file system.
 23. **RDS:** Used for database management.
 24. **IAM Roles:** Used to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
-25. **Flyway:** 
+25. **Flyway:** Used to organise scripts in the Flyway file which is there Migrated securely via SSH Tunnel into the MySQL RDS.
 
 ## **Deployment Steps**
 
@@ -61,7 +61,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 2. Set up Route 53 for domain name registration and DNS management.
 3. Use AWS Certificate Manager to manage SSL/TLS certificates for secure communication.
 
-### Script Confirugation
+### Script Configruation
 1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is build.
 2. Create a folder in your visual studio code which will host the following files i.e. Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
 3. Build the Dockerfile that will be used to create the Docker image updating the values and information within the Dockerfile script. (See the script below which is ran used Visual Studio Code).
@@ -123,12 +123,27 @@ flyway.cleanDisabled=false
 ```
 4. Copy the credential information above and past in into the newly created 'flyway.conf file created using your RDS configuration information i.e Master username and DB name to update the crednetials. This information will be used to connect the RDS Database.
 5. Download and paste the SQL script to the SQL directory within the Flyway folder. The SQL script for the data that will be migrated into the RDS databse can be found under 'SQL Database Migration Script'
-6. In order for FLyway to migrate the script into the RDs database,  Rename the SQL 'rentzone' file within the SQL folder to the format FlyWay expects. 
-
-   
+6. In order for Flyway to migrate the script into the RDS database,  Rename the SQL 'rentzone' file within the SQL folder to the format Flyway expects using the 'version__' method which is the name format Flyway expects.
 
 
+### SSH Tunnel Setup
+1. In order to setup up SSH Tuunnel or Linux, Mac or Windows, the relevant command would need to be run. see directly below:
+```bash
+# to create an ssh tunnel in powershell, execute the following command:
+ssh -i <key_pier.pem> ec2-user@<public-ip> -L 3306:<rds-endpoint>:3306 -N
 
+# to create an ssh tunnel in linux or macOS, execute the following commands:
+Note: Be sure to replace YOUR_EC2_KEY, LOCAL_PORT, RDS_ENDPOINT, REMOTE_PORT, EC2_USER, and EC2_HOST with your relevant information.
+
+ssh -i "YOUR_EC2_KEY" -L LOCAL_PORT:RDS_ENDPOINT:REMOTE_PORT EC2_USER@EC2_HOST -N -f
+```
+Replace the generic parts of the command with the rlevant finromation partaining to your Key Pair Name, RDS Endpoint, local port number and the other information within the command you would need to replace.
+
+2. Once you have filled in the command information, open a new terminal in VS Code and change your directory to where your Key Pair is stored paste the command within the terminal and press enter.
+3. Once you press enter, open an integrated terminal to the flyway directory and run the Flway Migrate command below to migrate the data into the RDS database.
+```bash
+.\ flyway migrate
+```
 ## **Deployment Scripts**
 
 ### Dockerfile-reference Installation Script
