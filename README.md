@@ -21,105 +21,106 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
 - - - 
 ## **Architecture**
 
-1. **Virtual Private Cloud (VPC):** Created a 3 Tier VIPC with Public Subnets and Private App Subnets and Private Data Subnets in 2 availability zones to segregate different components and enhance security.
+1. **Virtual Private Cloud (VPC):** Created a 3-Tier VPC with Public Subnets, Private App Subnets, and Private Data Subnets in 2 availability zones to segregate different components and enhance security.
 2. **Public Subnets:** Used for infrastructure components like the NAT Gateway and Application Load Balancer.
 3. **Internet Gateway:** Enables communication between instances in the VPC and the internet.
 4. **Private Subnets:** Used to host the web server, designed to serve web pages and applications over the internet securely.
-5. **EC2 Instances:** Utilised to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
-6. **Bastion Host:** Used to migrated data into the RDS database whiilst providing perimeter access and control security
+5. **EC2 Instances:** Utilized to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
+6. **Bastion Host:** Used to migrate data into the RDS database whilst providing perimeter access and control security.
 7. **AWS Fargate:** Helps to run containers without having to manage servers or clusters.
-8. ***S3 Bucket:** Enables envrionmental file storage.
+8. **S3 Bucket:** Enables environmental file storage.
 9. **Application Load Balancer:** Distributes web traffic across an Auto Scaling Group of EC2 instances in two availability zones for high availability and fault tolerance.
 10. **Availability Zones:** Ensures high availability and fault tolerance by deploying resources across multiple zones.
 11. **Resources:** NAT Gateway, Bastion Host, and Application Load Balancer are deployed in Public Subnets.
-12. **POTENTIALLY REMOVE THIS: Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
+12. **Auto Scaling Group:** Dynamically manages EC2 instances to ensure scalability, fault tolerance, and elasticity.
 13. **Route 53:** Used for domain name registration and DNS record management.
-14. **Docker:** **- edited** Dockerfile created to build Docker image which will contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile. The Build Argument allows us to build the image locally so it can be pushed to Amazon ECR. The Environemnt Variables are set to each Build Argument overall eliminating the need to hard code sensitive information on the Dockerfile.
+14. **Docker:** Dockerfile created to build Docker image which will contain Build Arguments and Environment Variables to pass secrets to the Dockerfile. The Build Arguments allow us to build the image locally so it can be pushed to Amazon ECR. The Environment Variables are set to each Build Argument overall, eliminating the need to hard code sensitive information on the Dockerfile.
 15. **Security Groups:** Acts as a network firewall to control traffic.
 16. **Instances:** Configured to access the internet via the NAT Gateway, even in private subnets.
 17. **GitHub:** Used for version control and collaboration, storing web files.
-18. **Git:** Used to create a Gitignore file to prevent the Dockerfile being committed to Github.
+18. **Git:** Used to create a .gitignore file to prevent the Dockerfile from being committed to GitHub.
 19. **Certificate Manager:** Manages SSL/TLS certificates to secure application communications.
 20. **SNS:** Simple Notification Service is configured to alert about activities within the Auto Scaling Group.
 21. **EFS:** Used for a shared file system.
-23. **RDS:** Used for database management.
-24. **IAM Roles:** Used to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
-25. **Flyway:** Used to organise scripts in the Flyway file which is there Migrated securely via SSH Tunnel into the MySQL RDS.
+22. **RDS:** Used for database management.
+23. **IAM Roles:** Used to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
+24. **Flyway:** Used to organize scripts in the Flyway file which is then migrated securely via SSH Tunnel into the MySQL RDS.
 
 ## **Deployment Steps**
 
-### VPC Setup 
+### VPC Setup
 1. Create a VPC with public and private subnets across two availability zones. **- edited**
-2. Enable DNS Host names within the VPC. **- edited**
-3. Set up Internet Gateway and attach it to the VPC. **- edited**
-4. Create the Public and Private Subnets for the availability zones enabling auto assign IP setting for the public subnets. **- edited**
-5. Create a Route Table and add a route to direct network traffic to the Intenet Gateway and associate the two subnets with the route table. **- edited**
-7. Create a NAT Gateway in the public subnet for internet access from private subnets.
+2. Enable DNS hostnames within the VPC. **- edited**
+3. Set up an Internet Gateway and attach it to the VPC. **- edited**
+4. Create the public and private subnets for the availability zones, enabling auto-assign IP setting for the public subnets. **- edited**
+5. Create a Route Table, add a route to direct network traffic to the Internet Gateway, and associate the two subnets with the route table. **- edited**
+6. Create a NAT Gateway in the public subnet for internet access from private subnets.
 
 ### Security and Gateway Configuration
 1. Configure security groups to allow necessary inbound and outbound traffic.
 2. Set up Route 53 for domain name registration and DNS management.
 3. Use AWS Certificate Manager to manage SSL/TLS certificates for secure communication.
 
-### Script Configruation
-1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is build.
-2. Create a folder in your visual studio code which will host the following files i.e. Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
-3. Build the Dockerfile that will be used to create the Docker image updating the values and information within the Dockerfile script. (See the script below which is ran used Visual Studio Code).
-4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php has AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPs in order for the application to load properly.
-5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a Gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed does not include the AppServiceProvider.php file as it is sensitive information. Copy the 'Dockerfile-reference' file name into the gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
-6. Create a new Dockerfile in the rentzone folder and copy the Dockerfile installation script below into the newly created Dockerfile. Youll see that this Dockefile and the orginal Dockerfile created now title Dockerfile-refence looks the same. The only difference is that the new Dockerfile contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile.
-7. Write the script to build the Dockerfile image by creating a new file in the renzone folder called build_image.sh. Copy the 'buid_image.sh script below into the buile_image.sh file and for every build argument listed in the Dockerfile enter their values in the build_image.sh file
-8. The next step is to make the shell script file created above in line 7 executable. Using the command text script below run 'chmod +x build_image.sh' in VS Code to excute the build_image.sh executable.
-9. Run the shell script file to build the Docker image. Do this right clicking 'build_image.sh and select 'open in integrated terminal.'
+### Script Configuration
+1. Create a personal access token which Docker will use to clone the Application Code repository when the Docker image is built.
+2. Create a folder in your Visual Studio Code which will host the following files, i.e., Dockerfile, AppServiceProvider.php (some files which you will create as a point in the project).
+3. Build the Dockerfile that will be used to create the Docker image, updating the values and information within the Dockerfile script. (See the script below which is run using Visual Studio Code).
+4. Create a replacement file for the AppServiceProvider.php in the folder you created. Enter the AppServiceProvider.php script below into the file. All of the required code is already in the root folder. We copy the file containing all the required code and replace it with the file in the application code. This is to ensure that the AppServiceProvider.php file contains the specific code set to redirect traffic from HTTP to HTTPS in order for the application to load properly.
+5. As the file would contain sensitive information, rename Dockerfile to 'Dockerfile-reference' and create a .gitignore file for best practice. The Dockerfile-reference file should not be committed into a repository to ensure that any changes which are tracked and committed do not include the AppServiceProvider.php file as it contains sensitive information. Copy the 'Dockerfile-reference' file name into the .gitignore file. Note that the file was renamed to keep 'Dockerfile' available for the reference file which does not require sensitive information to be stored.
+6. Create a new Dockerfile in the rentzone folder and copy the Dockerfile installation script below into the newly created Dockerfile. You'll see that this Dockerfile and the original Dockerfile (now titled Dockerfile-reference) look the same. The only difference is that the new Dockerfile contains Build Arguments and Environment Variables to pass secrets to the Dockerfile.
+7. Write the script to build the Dockerfile image by creating a new file in the rentzone folder called build_image.sh. Copy the 'build_image.sh' script below into the build_image.sh file and for every build argument listed in the Dockerfile enter their values in the build_image.sh file.
+8. The next step is to make the shell script file created above in line 7 executable. Using the command text script below, run 'chmod +x build_image.sh' in VS Code to execute the build_image.sh executable.
+9. Run the shell script file to build the Docker image. Do this by right-clicking 'build_image.sh' and selecting 'open in integrated terminal.'
 
 ### Install AWS Command Line CLI
 1. Visit www.docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-2. Depending on your OS, run the command line installer instructions on your terminal
+2. Depending on your OS, run the command line installer instructions on your terminal.
 
 ### IAM User Creation
-1. Create an IAM user assigning administrative access. Create an secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
-2. Run AWS Configure Command on command prompt or Terminal enter user access key ID and Secret Access Key information.
+1. Create an IAM user assigning administrative access. Create a secret access key and access key ID for the IAM user account. This is to allow for the secret access key and access key ID to authenticate with AWS in order to push the container image to ECR.
+2. Run the AWS Configure Command on Command Prompt or Terminal and enter user access key ID and Secret Access Key information.
 
 ### ECR and Application Setup
-1. Create a repository in Amazon ECR with AWS CLI. using the command below.
-```bash
-aws ecr create-repository --repository-name <repository-name> --region <region>
-```
-2. Push the Dock Image to the Amazon ECR repository already created by running the command below. Replace placeholders with the actual tage name and repository uri. In this case the tage name used on thos projectrentzone. The repository uri can be located on the Amazon ECR repositories page. This command will re-tag the image, copy the image a paste it with the terminal of the renzone folder to successfully retag the image.
-```bash
-docker tag <image-tag> <repository-uri>
-```
-3. Once the image is re-tagged, log into your Amazon ECR run the command below to push the Docker Image into the Amazon ECR repository. Log into the management console to find the repository uri
-```bash
-docker push <repository-uri>
-```
-4. To log into Amazon ECR, use the script below updating the account ID and reigion information. This information can be otained from the AWS management console. Once update copy and paste the command script in the open terminal of the rentzone folder.
-```bash
-aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
-```
-5. Run the command of pushing the image into the ECR repository. Once this is completed, the ECS Fargate service will use this image to run the containers. 
-```bash
-docker push <repository uri>
-```
+1. Create a repository in Amazon ECR with AWS CLI using the command below:
+    ```bash
+    aws ecr create-repository --repository-name <repository-name> --region <region>
+    ```
+2. Push the Docker Image to the Amazon ECR repository already created by running the command below. Replace placeholders with the actual tag name and repository URI. In this case, the tag name used is `rentzone`. The repository URI can be located on the Amazon ECR repositories page. This command will re-tag the image, copy the image, and paste it with the terminal of the `rentzone` folder to successfully re-tag the image.
+    ```bash
+    docker tag <image-tag> <repository-uri>
+    ```
+3. Once the image is re-tagged, log into your Amazon ECR and run the command below to push the Docker Image into the Amazon ECR repository. Log into the management console to find the repository URI.
+    ```bash
+    docker push <repository-uri>
+    ```
+4. To log into Amazon ECR, use the script below updating the account ID and region information. This information can be obtained from the AWS management console. Once updated, copy and paste the command script in the open terminal of the `rentzone` folder.
+    ```bash
+    aws ecr get-login-password | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+    ```
+5. Run the command to push the image into the ECR repository. Once this is completed, the ECS Fargate service will use this image to run the containers.
+    ```bash
+    docker push <repository-uri>
+    ```
+
 ### Key Pair Creation
 1. Create the Key Pair which will be used to SSH into the management instance.
-2. Once you create your Key Pair, the note txt file will download containing the Key Pair information. Move this txt file to where your powershell terminal directory is pointing to. The reason for this is so when the you run the command to SSH into the EC2 instance, the Key Pair will already be in the directory you run the SSH command from.
+2. Once you create your Key Pair, a note txt file will download containing the Key Pair information. Move this txt file to where your PowerShell terminal directory is pointing to. The reason for this is so when you run the command to SSH into the EC2 instance, the Key Pair will already be in the directory you run the SSH command from.
 
 ### Bastion Host Configuration
-1. Create a Bastion Host Launch Instance using the Amazon 2 Linux AMI and T2 Mirco which are both free tiers.
-2. Ensure to enquip the Kep Pair created above and select the VPC used to host the resources within the VPC environment.
-3. Select the Pbulic AZ1 Subnet and select the Bastion Host Security Group which you would created in the Secruity Group creation step above.
+1. Create a Bastion Host Launch Instance using the Amazon Linux 2 AMI and T2 Micro, which are both free tiers.
+2. Ensure to equip the Key Pair created above and select the VPC used to host the resources within the VPC environment.
+3. Select the Public AZ1 Subnet and select the Bastion Host Security Group which you created in the Security Group creation step above.
 
 ### Flyway Configuration
 1. Download Flyway Community Version and open the Flyway folder in Visual Studio Code.
-2. within the Flyway folder under 'conf' create a 'flyway.conf' file 
-3. In order to use Flyway to migrate data into the RDS MySQL Database, the Flyway configuration file must be updated with the credentials of the database below:
-```bash
-flyway.url=jdbc:mysql://localhost:3306/
-flyway.user=
-flyway.password=
-flyway.locations=filesystem:sql
-flyway.cleanDisabled=false
+2. Within the Flyway folder under 'conf', create a `flyway.conf` file.
+3. In order to use Flyway to migrate data into the RDS MySQL Database, the Flyway configuration file must be updated with the credentials of the database as shown below:
+    ```bash
+    flyway.url=jdbc:mysql://localhost:3306/
+    flyway.user=
+    flyway.password=
+    flyway.locations=filesystem:sql
+    flyway.cleanDisabled=false
 ```
 4. Copy the credential information above and past in into the newly created 'flyway.conf file created using your RDS configuration information i.e Master username and DB name to update the crednetials. This information will be used to connect the RDS Database.
 5. Download and paste the SQL script to the SQL directory within the Flyway folder. The SQL script for the data that will be migrated into the RDS databse can be found under 'SQL Database Migration Script'
@@ -421,9 +422,9 @@ EXPOSE 80 3306
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]t
 ```
 
-### Script to build the Dockerimage Installation Script
+### Script to build the Docker Image Installation Script
 
-Now that the Dockerfile has been created, the script below will be used to build the Dockerimage.
+Now that the Dockerfile has been created, the script below will be used to build the Docker Image.
 
 ```bash
 #!/bin/bash
@@ -444,7 +445,7 @@ docker build \
 ```
 ### Command script 
 
-This command script contains the various script instructions to execute the buildimage.sh, execute the docker image and other intructions.
+This command script contains the various script instructions to execute the build Image.sh, execute the docker Image and other intructions.
 
 ```bash
 # make shell script executable: 
