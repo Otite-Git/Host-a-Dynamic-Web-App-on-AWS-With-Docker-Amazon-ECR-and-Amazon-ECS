@@ -121,13 +121,14 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilizing variou
     flyway.password=
     flyway.locations=filesystem:sql
     flyway.cleanDisabled=false
-```
+    ```
+
 4. Copy the credential information above and past in into the newly created 'flyway.conf file created using your RDS configuration information i.e Master username and DB name to update the crednetials. This information will be used to connect the RDS Database.
 5. Download and paste the SQL script to the SQL directory within the Flyway folder. The SQL script for the data that will be migrated into the RDS databse can be found under 'SQL Database Migration Script'
 6. In order for Flyway to migrate the script into the RDS database,  Rename the SQL 'rentzone' file within the SQL folder to the format Flyway expects using the 'version__' method which is the name format Flyway expects.
 
 
-### SSH Tunnel Setup
+### SSH Tunnel Setup 
 1. In order to setup up SSH Tuunnel or Linux, Mac or Windows, the relevant command would need to be run. see directly below:
 ```bash
 # to create an ssh tunnel in powershell, execute the following command:
@@ -145,6 +146,39 @@ Replace the generic parts of the command with the rlevant finromation partaining
 ```bash
 .\ flyway migrate
 ```
+
+### Create the Application Load balancer
+1. Prior to creating the Application Load Balancer, the Target Group must first be created to ensure that when the ECS Sevcie creates the tags, It will add those tags to the Target Group then the Application Load Balancer can route traffic to the tags in the target group.Ensure that when creating the Target Group IPv4 address type and HTTP at Port 80 is selected.
+2. After thae tags have been created create the Applicaton Load Balancer within the VPC ensuring both Public Subnet AZ1 and AZ2 Availability Zones are selected as an Application Load Balancer always have to have a reach to the Public and not the Private Subnets. Under Security Group, remove the default seeting and select the Application Load Balancer security Group which was created .
+
+### Certificate Manager
+1. Register for a SSL Certificate from the AWS Certificate Manager which will be used to encrypt all communications between the web browser and web servers. Ensure to select 'DNS Validation' which is the method also recommended.
+2. Once you request the certififcate, the status will state pending validation until a record set is created in Route 53 to validate the ownership of the domain names.
+
+### HTTPS Listner Configuration
+1. A HTTPS Listner will be created for the Application Load Balancer with the SSL Certficate created to the Listner to secure the communications between the ned users and the application.
+2. Ensure that wen creating the HTTPS Listner the port number used is 443.
+
+### Environment File Creation
+1. Create an Environment File called' rentzone.env' to store the environment vairables defined in the Docker file. When the Docker file was created, the following variables below were defined within it:
+```bash
+PERSONAL_ACCESS_TOKEN=
+GITHUB_USERNAME=
+REPOSITORY_NAME=
+WEB_FILE_ZIP=
+WEB_FILE_UNZIP=
+DOMAIN_NAME=
+RDS_ENDPOINT=
+RDS_DB_NAME=
+RDS_MASTER_USERNAME=
+RDS_DB_PASSWORD=
+```
+2. The 'build_image= script located within the Docker file will contain the this information which can be copy and pasted across to the 'rentzone.env' file. As this file constains sesnstive information, at the name ofthe file to the 'gitignore' file to ensure that the sensitvie information is not tracker and uploaded onto Git Hub.
+
+### AWS S3 Bucket Creation
+1. The S3 Bucket will be created to upload the environment file created in the step above. When the ECS Tags is created, it will retrieve the environment variables from the file in the S3 Bucket.
+2. Ensure to create the S3 Bucket in the region where the VPC is hosted. Select the S3 Bucket that has been created and upload the environment file created in the step above into this S3 Bucket. The file to be uploaded for this project is titled 'rentzone.env'
+
 ## **Deployment Scripts**
 
 ### Dockerfile-reference Installation Script
