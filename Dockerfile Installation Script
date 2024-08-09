@@ -1,3 +1,5 @@
+This script sets up the Dockerfile which will be used to build the Docker image contains Build Arguments and Environment Variable to pass sercrets to the Dockerfile eliminating the need to hard code sensitive information on the Dockerfile.
+
 # Use the latest version of the Amazon Linux base image
 FROM amazonlinux:2
 
