@@ -1,3 +1,5 @@
+This command script contains the various script instructions to execute the build Image.sh, execute the docker Image and other intructions.
+
 # make shell script executable: 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
