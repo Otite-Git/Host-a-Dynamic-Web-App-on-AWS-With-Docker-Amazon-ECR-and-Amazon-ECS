@@ -7,7 +7,7 @@ In this repository you will see a description of the project, low and high level
 
 ## **Website Page**
 
-[www.rentzonepro.com]([https://drive.google.com/file/d/1Gy5ZhBRLFuDI_Mi-Fpw_jSVhp-mOQ7mo/view?usp=sharing](https://drive.google.com/file/d/1He_sJl0NVjHLmuV95Fla85G09DL8LAy0/view?usp=sharing)
+[www.rentzonepro.com](https://drive.google.com/file/d/1He_sJl0NVjHLmuV95Fla85G09DL8LAy0/view?usp=drive_link)
 
 ## **Project Overview** 
 
