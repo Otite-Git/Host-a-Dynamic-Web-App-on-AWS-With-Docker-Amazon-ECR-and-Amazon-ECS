@@ -226,7 +226,7 @@ RDS_DB_PASSWORD=
 ## **Additional Resources**
 
 - **AWS Documentation:** Refer to the [AWS documentation](https://aws.amazon.com/documentation/) for detailed guides on setting up VPC, EC2, Auto Scaling, Load Balancer, and other services.
-- **GitHub Repository Files:** Refer to [Otite-Git/Host-WorPress](https://github.com/Otite-Git/Host-a-WordPress-Website-on-AWS.git) to access the repository files for scripts, architectural diagrams, and configuration files necessary for deploying the website.
+- **GitHub Repository Files:** Refer to [Otite-Git/Host-Dynamic-Web-App](https://github.com/Otite-Git/Host-a-Dynamic-Web-App-on-AWS-With-Docker-Amzon-ECR-and-Amazon-ECS.git) to access the repository files for scripts, architectural diagrams, and configuration files necessary for deploying the website.
 
 ## **Contributing**
 
@@ -236,12 +236,13 @@ Contributions to this project are welcome! Please fork the repository and submit
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+
 ## **What problems did I solve by completing this project?**
 
-1. **Scalability:** I was able to effectively Handle varying levels of web traffic efficiently through using AWS services like Auto Scaling and Elastic Load Balancing to automatically adjust the number of running instances based on traffic demand.
- 
-2. **Performance Optimisation:** I solved the problem of slow loading times and handling varying levels of web traffic effciently using AWS services like Auto Scaling and Elastic Load Balancing to automatically adjust the number of running instances based on traffic demand.
+1. **Scalable and Reliable Infrastructure:** This project solved the problem of manual deployments by automating the build, push, and deployment of Docker images to AWS ECS, significantly reducing deployment time and the risk of human error. 
 
+2. **Secure and Efficient Image Management:** Through the use of AWS ECR, the project provided a secure and efficient way to manage and store Docker images, addressing the problem of image version control and security in public repositories.
+ 
 3. **Database Management:** Using AWS to host WordPress enabled me to effectively manage and optimise the database that supports WordPress through using Amazon RDS for managed MySQL a databases, enabling read replicas for load distribution.
 
 4. **High Availability:** I Minimised downtime and ensuring continuous availability by deploying applications across 2 Availability Zones AZ1 & AZ2, using Elastic Load Balancing to distribute traffic, and setting up failover configurations.
@@ -250,16 +251,26 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## **What issues did I face while working on the project and how did I resolve that issue?**
   
-- **WordPress credentials issues:** I had faced the issue of my WordPress credentials automatically registering through an auto-fill feature generating a strong passsword which I did not record. I solved this issue by firstly deleting the existing EFS RDS and EC2 Instance and creating new EFS RDS and EC2 Instances. Once created, I then SSH'ed into the instance via Amazon Linux where I was to re-nstall the WordPress script which consisted of setting up the WordPress application on an EC2 instance, including Apache, PHP, MySQL, and mounting the Amazon EFS.
+- **AWS Authentication and Permissions:** While working on this project, one of the challenges was managing AWS IAM roles and permissions to securely grant necessary access to AWS resources (like ECR and ECS). Incorrect configurations often led to permissions errors and access denials. I resolved this by carefully setting up and verifying IAM roles, policies, and permissions. Utilizing AWS-managed policies and restricting permissions to the least privilege principle also ensured that only necessary actions were allowed.
 
-- **Increasing Costs:** The challenge of increasing cost also became a concern which I was able to resolve thorugh by firstly enabalbing MFA (Multi Factor Authentication) to enhance the security access of my root user account and enable best practice. Through this, I reduced the risk of fraudulent access to my account and using it resulting in high usage cost. Furthermore, I used AWS budgets and Cost Explorer to effectively manage costs by settting alerting and identifying which service was a high usage cost through visibility of the cost usage graph.  
+- **Increasing Costs:** The challenge of increasing cost also became a concern which I was able to resolve thorugh by turning off resources such as the EC2 Instance, the RDS assets and Bastion Host when they were not in use. Despite this saving cost as it eliminated inactve running time, this meant that I would need to update the Elastic IP Address and RDS Endpoint information within my Dockerfile everytime I restarted the instances and RDS assets
+  
+- **Docker Image Management:** Managing Docker images was another challenge, particularly regarding the creation, tagging, and pushing of images to AWS ECR.
+  
+- **Network Configuration:** Configuring networking settings in AWS, such as setting up VPCs, Security Groups, and Load Balancers, was complex and prone to misconfigurations, which could lead to connectivity issues or insecure setups. I solved errors but double checking and running through the configurations steps for each resource twice to ensure the steps were followed to provide robustness.
 
  ## **What overall lessons did I learn?**
- 
-- **AWS Linux and Bash:** This project gave me the ability to increase my skills in AWS Linux and bash as I was required to use the EC2 Instance to install the WordPress script
 
-- **Networking:** I further my knowledge on Networking through inplementation of tools such as the Internet Gateway. This enabled the resources within the VPC Public Subnet to connect to the internet, and resources within the VPC Private Subnet to connect to the internet via the NAT Gateway. The use of the NAT Gateway enables resources like the EC2 Instances on the Private App Subnet to access the internet and download package updates using 'Sudo Yum update' through SSH'ing into the EC2 instance. So there is a requirement for the EC2 Instance to have access to the internet without external users on the internet gaining access to the EC2 Instance.
+ - **Docker Image Management:** To address effective management of Docker Images  to avoide incorrect tagging and file corrupted of the Docker image , using CI/CD pipelines can help automated the build and push process ensuring consistency and reduced human error.
+   
+ - **Network Configuration:** To effectivle reduce network errors, using Terraform scripts and AWS CloudFormation templates to automate and standardise the creation of network resources can help minimise manual errors and ensured reproducibility.
+ 
+- **AWS Linux and Bash:** This project gave me the ability to increase my skills in AWS Linux and bash as I was required to use devleop various scripts in Visual Studio Code.
+
+- **Networking:** I further my knowledge on Networking through inplementation of tools such as the Internet Gateway. This enabled the resources within the VPC Public Subnet to connect to the internet, and resources within the VPC Private Subnet to connect to the internet via the NAT Gateway. The use of the NAT Gateway enables resources like the EC2 Instances on the Private App Subnet to access the internet and download package updates.
 
 - **IAM Management and Best Practice:** As part ot IAM Management best practice, I identified that it is not recommended to user a root account for cloud environment creation. Going forward, I increased the acess robustness of my root using account by regularly changing  passwords, using MFA (Mult Factor Authentication), removing access keys to the root account and reducing overall root user account user for sercurity perposes.
 
--  **Dockerfile Best Practice:** **- edited** Through doing this project, I also identified that going forward, best practice would be to create a Gitignore file to prevent the dockerfile being committed to Github restricting viewers who have access to the repository containing from viewing sensitive information such as personal access tokcen, Database endpoint usernames and password.
+-  **Dockerfile Best Practice:** Through doing this project, I also identified that going forward, best practice would be to create a Gitignore file to prevent the dockerfile being committed to Github restricting viewers who have access to the repository containing from viewing sensitive information such as personal access tokcen, Database endpoint usernames and password.
+  
+- **AWS ECS and Docker Integration:** This project enhanced my understanding of how to integrate Docker with AWS ECS, giving me practical experience in container orchestration and management. I learned the importance of containerised application architectures and how to efficiently deploy them in a cloud environment.
