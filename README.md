@@ -11,7 +11,7 @@ In this repository you will see a description of the project, low and high level
 
 ## **Project Overview** 
 
-This project demonstrates how to host a Dynamic Web App on AWS, utilizing various AWS services for a scalable, secure, and highly available architecture. The key components include , creation of a Docker Hub account, 3-Tier AWs Network VPC, Nat Gateway 53, Security Groups, RDS Instances, Route 53, Bastion Host, SQL Scripting, IAM User Management and many more. The setup ensures high availability across multiple availability zones, security through security groups and SSL certificates, and scalability with auto-scaling groups.
+This project demonstrates how to host a Dynamic Web App on AWS, utilising various AWS services for a scalable, secure, and highly available architecture. The key components include the usage of Docker, 3-Tier AWS Network VPC, NAT Gateway 53, Security Groups, RDS Instances, Route 53, Bastion Host, SQL Scripting, IAM User Management and many more. The setup ensures high availability across multiple availability zones, security through security groups and SSL certificates, and scalability with auto-scaling groups.
 
 
 ![image](https://github.com/Otite-Git/Host-a-Dynamic-Web-App-on-AWS-With-Docker-Amzon-ECR-and-Amazon-ECS/assets/154989610/a6b60ad6-ba1c-4f5e-9255-c018bfdbb892)
