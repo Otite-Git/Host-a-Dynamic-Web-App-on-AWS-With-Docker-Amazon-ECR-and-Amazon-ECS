@@ -1,3 +1,5 @@
+This contains the SQL script which will be migrated into the RDS Database
+
 CREATE TABLE `bikes` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
