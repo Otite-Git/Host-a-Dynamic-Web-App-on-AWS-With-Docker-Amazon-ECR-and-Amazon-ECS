@@ -149,7 +149,7 @@ Replace the generic parts of the command with the rlevant finromation partaining
 
 ### Create the Application Load balancer
 1. Prior to creating the Application Load Balancer, the Target Group must first be created to ensure that when the ECS Sevcie creates the tags, It will add those tags to the Target Group then the Application Load Balancer can route traffic to the tags in the target group.Ensure that when creating the Target Group IPv4 address type and HTTP at Port 80 is selected.
-2. After thae tags have been created create the Applicaton Load Balancer within the VPC ensuring both Public Subnet AZ1 and AZ2 Availability Zones are selected as an Application Load Balancer always have to have a reach to the Public and not the Private Subnets. Under Security Group, remove the default seeting and select the Application Load Balancer security Group which was created .
+2. After the tags have been created, create the Applicaton Load Balancer within the VPC ensuring both Public Subnet AZ1 and AZ2 Availability Zones are selected as an Application Load Balancer always have to have a reach to the Public and not the Private Subnets. Under Security Group, remove the default seeting and select the Application Load Balancer security Group which was created .
 
 ### Certificate Manager
 1. Register for a SSL Certificate from the AWS Certificate Manager which will be used to encrypt all communications between the web browser and web servers. Ensure to select 'DNS Validation' which is the method also recommended.
@@ -178,6 +178,18 @@ RDS_DB_PASSWORD=
 ### AWS S3 Bucket Creation
 1. The S3 Bucket will be created to upload the environment file created in the step above. When the ECS Tags is created, it will retrieve the environment variables from the file in the S3 Bucket.
 2. Ensure to create the S3 Bucket in the region where the VPC is hosted. Select the S3 Bucket that has been created and upload the environment file created in the step above into this S3 Bucket. The file to be uploaded for this project is titled 'rentzone.env'
+
+### 2nd IAM User Creation
+1. create and IAM Role to grant permission for ECS to execute tasks. The ECS Service will use the IAM role to access the environment file created above.
+2. Select the Elastic Container Service as a Use Case for the IAM role and add two in line policies: to S3:GetObject and S3:GetBucketLocation. The inline policy will allow the ECS service to access the environment file uploaded into the S3 Bucket created above.
+
+### ECS Cluster Creation
+1. Create a Cluster assigning the VPC host environment to the Cluster. Assign Private App Subnet AZ1 and Private App Subnet AZ2 to the Subnet Selection.
+
+### Task Definition Creation
+1. Once the ECS Cluster is created, the Task Definition would be create which contains the blueprint and variables paremeters for a container.
+2. When Creating the Task Definition, be sure to select the IAM role created for the purposes of Task Execution.
+3. Depending on the Operation System used, select 'Linux/ARM64' if the image was build on a MAC computer. If the image was build on a MAC computer select Linux/X86_64. 
 
 ## **Deployment Scripts**
 
