@@ -25,7 +25,7 @@ This project demonstrates how to host a Dynamic Web App on AWS, utilising variou
 2. **Public Subnets:** Used for infrastructure components like the NAT Gateway and Application Load Balancer.
 3. **Internet Gateway:** Enables communication between instances in the VPC and the internet.
 4. **Private Subnets:** Used to host the web server, designed to serve web pages and applications over the internet securely.
-5. **EC2 Instances:** Utilized to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
+5. **EC2 Instances:** Utilised to host the WordPress website, accessible via an EC2 Instance Connect Endpoint.
 6. **Bastion Host:** Used to migrate data into the RDS database whilst providing perimeter access and control security.
 7. **AWS Fargate:** Helps to run containers without having to manage servers or clusters.
 8. **S3 Bucket:** Enables environmental file storage.
