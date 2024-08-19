@@ -1,5 +1,5 @@
 Use of AWS to host a Dynamic Web App on AWS's leveraging Docker, Amazon ECR and Amazon ECS service suite.
-# 💻Host a Dynamic Web App on AWS with Docker Amzon ECR and Amazon ECS☁️
+# 💻Host a Dynamic Web App on AWS with Docker Amazon ECR and Amazon ECS☁️
 
 Hi! Welcome to my repository containing my AWS Project I've have undertaken as a Cloud Engineer and Cloud architect enthusiast⚡️:
 
