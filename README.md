@@ -1,7 +1,7 @@
-Use of AWS to host a Dynamic Web App on AWS's leveraging Docker, Amazon ECR and Amazon ECS service suite.
+
 # 💻Host a Dynamic Web App on AWS with Docker Amazon ECR and Amazon ECS☁️
 
-Hi! Welcome to my repository containing my AWS Project I've have undertaken as a Cloud Engineer and Cloud architect enthusiast⚡️:
+Hi! Welcome to my repository containing my AWS Project I've have undertaken as an AWS Cloud expert and enthusiast⚡️
 
 In this repository you will see a description of the project, low and high level architecture, scripting files and information on other key assets that I have used to develop this project as part of my portfolio and progressive development.
 
@@ -11,7 +11,7 @@ In this repository you will see a description of the project, low and high level
 
 ## **Project Overview** 
 
-This project demonstrates how to host a Dynamic Web App on AWS, utilising various AWS services for a scalable, secure, and highly available architecture. The key components include the usage of Docker, 3-Tier AWS Network VPC, NAT Gateway 53, Security Groups, RDS Instances, Route 53, Bastion Host, SQL Scripting, IAM User Management and many more. The setup ensures high availability across multiple availability zones, security through security groups and SSL certificates, and scalability with auto-scaling groups.
+This project demonstrates how to host a Dynamic Web App on AWS, utilising various AWS services for a scalable, secure, and highly available architecture. The key components include the usage of Docker, 3-Tier AWS Network VPC, NAT Gateway 53, Security Groups, RDS Instances, Route 53, Bastion Host, SQL Scripting, IAM User Management and many more. The setup ensures high availability across multiple availability zones, security through security groups and SSL certificates, and scalability with auto-scaling groups. Use of AWS to host a Dynamic Web App on AWS's leveraging Docker, Amazon ECR and Amazon ECS service suite.
 
 
 ![image](https://github.com/Otite-Git/Host-a-Dynamic-Web-App-on-AWS-With-Docker-Amzon-ECR-and-Amazon-ECS/assets/154989610/a6b60ad6-ba1c-4f5e-9255-c018bfdbb892)
@@ -231,10 +231,6 @@ RDS_DB_PASSWORD=
 ## **Contributing**
 
 Contributions to this project are welcome! Please fork the repository and submit a pull request with your enhancements.
-
-## **License**
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 
 ## **What problems did I solve by completing this project?**
